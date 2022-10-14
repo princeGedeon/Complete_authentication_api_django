@@ -3,10 +3,11 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from accounts.serializers import UserRegistrationSerializer,UserLoginSerializer
+from accounts.serializers import UserChangePasswordSerializer,UserProfileSerializer,UserRegistrationSerializer,UserLoginSerializer
 
 from accounts.renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -40,8 +41,26 @@ class UserLoginView(APIView):
         email=serializer.data.get('email')
         password = serializer.data.get('password')
         user=authenticate(email=email,password=password)
-        token=get_tokens_for_user(user)
+
         if user is not None:
+            token = get_tokens_for_user(user)
             return Response({'token':token,'msg':'Login Sucess'},status=status.HTTP_200_OK)
 
         return Response({'errors':{'non_field_errors':['Email or Password is not Valid']}}, status=status.HTTP_404_NOT_FOUND)
+
+class UserProfileView(APIView):
+    renderer_classes = [UserRenderer]
+    permission_classes = [IsAuthenticated]
+    def get(self,request,format=None):
+        serializer=UserProfileSerializer(request.user)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+
+class UserChangePasswordView(APIView):
+    renderer_classes = [UserRenderer]
+    permission_classes = [IsAuthenticated]
+    def post(self,request,format=None):
+        serializer=UserChangePasswordSerializer(data=request.data,context={'user':request.user})
+        if serializer.is_valid(raise_exception=True):
+            return Response({'msg':"Password changed"},status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
