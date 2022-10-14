@@ -108,6 +108,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+
+    #'DEFAULT_RENDERER_CLASSES':('rest_framework.renderers.JSONRenderer',)
+#
+}
+
+
 #CORS HEADERS
 CORS_ALLOWED_ORIGINS = [
 
