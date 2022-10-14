@@ -37,13 +37,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders",
     'drf_yasg',
-    'rest_framework'
+    'rest_framework',
+    'rest_framework_simplejwt',
+    "accounts"
+
 ]
 
 MIDDLEWARE = [
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    #MIDDLEWARE CORS HEADERS
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -101,6 +108,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#CORS HEADERS
+CORS_ALLOWED_ORIGINS = [
+
+    "http://localhost:3000",
+    "http://127.0.0.1:9000",
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -123,3 +136,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Set model user
+AUTH_USER_MODEL="accounts.User"
