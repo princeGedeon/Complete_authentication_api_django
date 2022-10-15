@@ -6,6 +6,8 @@ from rest_framework import serializers
 from accounts.models import User
 from rest_framework.exceptions import ValidationError
 
+from accounts.utils import Util
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2=serializers.CharField(style={'input_type':"password"},write_only=True)
@@ -68,8 +70,14 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             print("Password Reset Token",token)
             link="http://localhost:3000/api/user/reset/"+uid+'/'+token
             print("Password Reset Link",link)
-            # EMail send
-
+            # EMail sen0
+            body='Click Following Link to Reset your password '+link
+            data={
+                'subject':"Reset Yout Password",
+                "body":body,
+                "to_email":user.email
+            }
+            Util.send_mail(data)
             return attrs
         else:
             raise ValidationError("You are not a Registered User")
